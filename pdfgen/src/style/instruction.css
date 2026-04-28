@@ -1,0 +1,126 @@
+.container {
+  min-height: 100vh;
+  width: 100vw;
+  background: #f5f7fb;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.wrapper {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Header */
+.header {
+  text-align: center;
+}
+
+.header h1 {
+  font-size: 28px;
+  margin-bottom: 5px;
+}
+
+.header p {
+  color: #666;
+}
+
+/* Card */
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.card h2 {
+  margin-bottom: 10px;
+}
+
+.card ul {
+  padding-left: 20px;
+  color: #444;
+}
+
+.card li {
+  margin-bottom: 10px;
+}
+
+/* Folder Structure */
+.folder-structure {
+  background: #f9fafb;
+  padding: 10px;
+  border-radius: 8px;
+  font-family: monospace;
+  margin-top: 5px;
+}
+
+.folder-structure p {
+  margin: 2px 0;
+}
+
+/* Table */
+.table-container {
+  overflow-x: auto;
+  margin-top: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+th {
+  background: #f0f2f5;
+  padding: 10px;
+  text-align: left;
+}
+
+td {
+  padding: 10px;
+  border-top: 1px solid #eee;
+}
+
+.sub-row {
+  background: #fafafa;
+}
+
+/* Sample Image */
+.sample-image {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.sample-image img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+/* Button */
+.button-container {
+  text-align: center;
+}
+
+.continue-btn {
+  background: #4f46e5;
+  color: white;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.2s;
+  box-shadow: 0 4px 10px rgba(79,70,229,0.3);
+}
+
+.continue-btn:hover {
+  background: #4338ca;
+}
