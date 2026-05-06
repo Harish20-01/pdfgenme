@@ -5,24 +5,32 @@ import template from '../../assets/temp3.jpg'
 
 const StatementPDF = ({ students }) => {
   const processStudent = (student) => {
-    /*  // Make sure subjects is an array
-     const subjects = Array.isArray(student.subjects) ? student.subjects : [];
-     const chunks = [];
- 
-     // Log for debugging
-     console.log(`Processing student ${student.name} with ${subjects.length} subjects`);
- 
-     // Split into chunks of 12
-     for (let i = 0; i < subjects.length; i += 12) {
-       chunks.push(subjects.slice(i, i + 12));
-     }
- 
-     // If no subjects, still need one page with empty array
-     if (chunks.length === 0) {
-       chunks.push([]);
-     } */
-
+    
     const subjects = Array.isArray(student.subjects) ? student.subjects : [];
+
+    //Special Grade Logic
+    const gradeLegendMap = {
+      'EX*': 'Excellent',
+      'GD*': 'Good',
+      'SAT*': 'Satisfactory',
+      'ATT*': 'Attended'
+    };
+
+    const specialSet = new Set();
+
+    subjects.forEach(s => {
+      if (s.letterGrade?.includes('*')) {
+        specialSet.add(s.letterGrade.toUpperCase());
+      }
+
+      if (String(s.gradePoint).includes('*')) {
+        specialSet.add(String(s.gradePoint).toUpperCase());
+      }
+    });
+
+    const legend = [...specialSet]
+      .map(g => gradeLegendMap[g] ? `${g} - ${gradeLegendMap[g]}` : g)
+      .join(', ');
 
     // STEP 1: Separate
     const regular = subjects.filter(s => !s.isAdditional);
@@ -62,14 +70,12 @@ const StatementPDF = ({ students }) => {
       chunks.push([]);
     }
 
-    // console.log(`Created ${chunks.length} pages`);
-
     // Create a page for each chunk
     return chunks.map((chunk, index) => {
       const pageData = {
         ...student,
         subjects: chunk,
-        allSubjects:student.subjects,
+        allSubjects: student.subjects,
         pageIndex: index,
         totalPages: chunks.length,
         isLastPage: index === chunks.length - 1,
@@ -93,7 +99,9 @@ const StatementPDF = ({ students }) => {
           cumEarned: ['19', '', '', '', '', '', '', ''],
           cgpa: '7.37',
           marksPercent: '76.80%'
-        }
+        },
+        legend:legend,
+
       };
 
       return pageData;
@@ -106,7 +114,7 @@ const StatementPDF = ({ students }) => {
     const studentPages = processStudent(student);
     allPages.push(...studentPages);
   });
-  const hasContinuedPage = allPages.length>1; 
+  const hasContinuedPage = allPages.length > 1;
   const styles = StyleSheet.create({
     page: {
       padding: 0,
@@ -132,8 +140,7 @@ const StatementPDF = ({ students }) => {
     }
 
   });
-  // console.log(`Total pages to render: ${allPages.length}`);
-
+  
   return (
     <Document>
       {allPages.map((pageData, index) => (
@@ -147,9 +154,10 @@ const StatementPDF = ({ students }) => {
               student={pageData}
               isLastPage={pageData.isLastPage}
               continuedPageLength={pageData.totalPages}
-              continuedPage={pageData.pageIndex+1}
+              continuedPage={pageData.pageIndex + 1}
               hasContinuedPage={hasContinuedPage}
               allSubjects={pageData.allSubjects}
+              legend={pageData.legend}
             />
           </View>
         </Page>

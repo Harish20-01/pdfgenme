@@ -170,7 +170,7 @@ export const parseStudentExcel = async (file, photoMap = {}) => {
                 break;
 
               case 'GPA':
-                currentStudent.footer.gpa = values;
+                currentStudent.footer.gpa = row.slice(1, 9).map(v => v?parseFloat(v).toFixed(2):'');
                 break;
 
               case 'CUMULATIVE':

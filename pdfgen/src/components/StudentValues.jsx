@@ -45,8 +45,8 @@ const styles = StyleSheet.create({
 
   photoContainer: {
     position: 'absolute',
-    top: '3.5cm',
-    left: '17.8cm',
+    top: '3.6cm',
+    left: '18cm',
     width: '2.4cm',
     height: '3.0cm',
     borderWidth: 1,
@@ -65,17 +65,17 @@ const styles = StyleSheet.create({
     /* fontWeight: 'bold', */
   },
 
-  regNo: { position: 'absolute', top: '4.45cm', left: '4.3cm' },
-  dob: { position: 'absolute', top: '4.45cm', left: '10cm' },
-  gender: { position: 'absolute', top: '4.45cm', left: '15.3cm' },
+  regNo: { position: 'absolute', top: '4.49cm', left: '4.3cm' },
+  dob: { position: 'absolute', top: '4.49cm', left: '10cm' },
+  gender: { position: 'absolute', top: '4.49cm', left: '15.3cm' },
 
-  pubDate: { position: 'absolute', top: '5.3cm', left: '4.3cm' },
-  regulation: { position: 'absolute', top: '5.3cm', left: '10cm' },
-  examMonth: { position: 'absolute', top: '5.3cm', left: '15.3cm' },
+  pubDate: { position: 'absolute', top: '5.38cm', left: '4.3cm' },
+  regulation: { position: 'absolute', top: '5.38cm', left: '10cm' },
+  examMonth: { position: 'absolute', top: '5.38cm', left: '15.3cm' },
 
   programValue: {
     position: 'absolute',
-    top: '6.05cm',
+    top: '6.07cm',
     left: '4.3cm',
   },
 
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
   footerContainer: {
     position: 'absolute',
     top: '22.65cm',
-    left: '4.5cm',
+    left: '4.25cm',
   },
 
   footerRow: {
@@ -180,19 +180,25 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
   cgpa: {
-    left: '0.65cm'
+    left: '0.48cm'
   },
   specialLegend: {
     fontSize: 9,
     left: '4.3cm',
-    marginTop: '1.0cm'
+    marginTop: '0.5cm'
   },
 
   endStatement: {
     fontSize: 9,
     textAlign: 'center',
-    marginTop: '1.0cm',
+    marginTop: '0.8cm',
   },
+  symbolDescription: {
+    fontSize: 8,
+    left: '3.6cm',
+    textAlign: 'left',
+    marginTop: '0.5cm',
+  }
 });
 
 const StudentValues = ({
@@ -201,7 +207,8 @@ const StudentValues = ({
   continuedPageLength,
   continuedPage,
   hasContinuedPage,
-  allSubjects
+  allSubjects,
+  legend
 }) => {
 
   // ===== SUMMARY CALCULATION =====
@@ -211,25 +218,6 @@ const StudentValues = ({
   const gpa = student.footer?.gpa || Array(8).fill('');
   const cumEarned = student.footer?.cumulative || Array(8).fill('');
 
-  // ===== SPECIAL GRADE LOGIC =====
-  const gradeLegendMap = {
-    'Ex*': 'Excellent',
-    'Gd*': 'Good',
-    'Av*': 'Average',
-    'Ab*': 'Absent',
-  };
-
-  const specialSet = new Set();
-
-  student.subjects.forEach(s => {
-    if (s.letterGrade?.includes('*')) {
-      specialSet.add(s.letterGrade);
-    }
-  });
-
-  const legend = [...specialSet]
-    .map(g => `${g} - ${gradeLegendMap[g]}`)
-    .join(', ');
 
   // ===== SPLIT SUBJECTS =====
   const additionalStart = student.subjects.findIndex(s => s.isAdditional);
@@ -245,9 +233,9 @@ const StudentValues = ({
       : student.subjects.slice(additionalStart);
 
   // ===== FOOTER RENDER =====
-  const renderRow = (arr,isCgpa = false) =>
+  const renderRow = (arr, isCgpa = false) =>
     arr.map((v, i) => (
-      <Text key={i} style={isCgpa?styles.footerCell_CGPA:styles.footerCell}>
+      <Text key={i} style={isCgpa ? styles.footerCell_CGPA : styles.footerCell}>
         {v || ' '}
       </Text>
     ));
@@ -327,7 +315,7 @@ const StudentValues = ({
         {/* CONTINUED */}
         {!isLastPage && (
           <Text style={styles.endStatement}>
-            {`**Continuing Sheet ${continuedPage}/${continuedPageLength}`}
+            {`**Continued Sheet ${continuedPage}/${continuedPageLength}`}
           </Text>
         )}
 
@@ -336,11 +324,21 @@ const StudentValues = ({
           <Text style={styles.specialLegend}>{legend}</Text>
         )}
 
+        {isLastPage && (
+          <Text style={styles.symbolDescription}>
+            {`* - Considered for CGPA Calculation in the 8th Semester as per Regulations.\n
+                & - Courses considered instead of the Professional / Open Elective Courses as per curriculum\n
+                ^ - Courses not considered for CGPA Calculation`
+            }
+          </Text>
+        )
+        }
+
         {/* END */}
         {isLastPage && (
           <Text style={styles.endStatement}>
             {`*** End of Statement *** \n`}
-            {hasContinuedPage ? `**Continued Sheet..${continuedPage}/${continuedPageLength}` : ''}
+            {hasContinuedPage ? `**Continuation Sheet..${continuedPage}/${continuedPageLength}` : ''}
           </Text>
         )}
       </View>
@@ -352,7 +350,7 @@ const StudentValues = ({
           <View style={styles.footerRow}>{renderRow(earned)}</View>
           <View style={styles.footerRow}>{renderRow(gradePoints)}</View>
           <View style={styles.footerRow}>{renderRow(gpa)}</View>
-          <View style={styles.footerRow}>{renderRow(cumEarned,true)}</View>
+          <View style={styles.footerRow}>{renderRow(cumEarned, true)}</View>
           <View style={[styles.cgpa]}><Text>{cumEarned[4] * 10}</Text></View>
         </View>
       )}

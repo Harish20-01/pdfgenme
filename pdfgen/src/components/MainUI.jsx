@@ -105,7 +105,7 @@ export default function App( {setShowMain}) {
             onChange={handleFolderUpload}
           />
           <div style={{ fontSize: '12px', color: '#666', marginTop: '5px' }}>
-            Folder must contain images named like <b>24001.jpg</b>
+            Folder must contain images named like <b>61772221001.jpg</b>
           </div>
         </div>
 
