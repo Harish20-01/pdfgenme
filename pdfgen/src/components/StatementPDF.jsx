@@ -5,7 +5,7 @@ import template from '../../assets/temp3.jpg'
 
 const StatementPDF = ({ students }) => {
   const processStudent = (student) => {
-    
+
     const subjects = Array.isArray(student.subjects) ? student.subjects : [];
 
     //Special Grade Logic
@@ -100,8 +100,10 @@ const StatementPDF = ({ students }) => {
           cgpa: '7.37',
           marksPercent: '76.80%'
         },
-        legend:legend,
-
+        legend: legend,
+        hasAmbersent: student.hasAmbersent,
+        hasAsterik: student.hasAsterik,
+        hasXor:student.hasXor,
       };
 
       return pageData;
@@ -114,6 +116,7 @@ const StatementPDF = ({ students }) => {
     const studentPages = processStudent(student);
     allPages.push(...studentPages);
   });
+
   const hasContinuedPage = allPages.length > 1;
   const styles = StyleSheet.create({
     page: {
@@ -140,7 +143,7 @@ const StatementPDF = ({ students }) => {
     }
 
   });
-  
+
   return (
     <Document>
       {allPages.map((pageData, index) => (

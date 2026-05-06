@@ -218,7 +218,7 @@ const StudentValues = ({
   const gpa = student.footer?.gpa || Array(8).fill('');
   const cumEarned = student.footer?.cumulative || Array(8).fill('');
 
-
+  console.log("all sub", allSubjects);
   // ===== SPLIT SUBJECTS =====
   const additionalStart = student.subjects.findIndex(s => s.isAdditional);
 
@@ -240,6 +240,24 @@ const StudentValues = ({
       </Text>
     ));
 
+  let symbol = "";
+
+    if (student.hasAmbersent) symbol = "&";
+    else if (student.hasAsterik) symbol = "*";
+    else if (student.hasXor) symbol = "^";
+
+  let addHeading = `ADDITIONAL COURSE${symbol}`;
+
+  if (isLastPage) {
+    allSubjects.forEach(s => {
+      if (s.code?.includes("*"))
+        student.hasAsterik = true;
+      else if (s.code?.includes("&"))
+        student.hasAmbersent = true;
+      else if (s.code?.includes("^"))
+        student.hasXor = true;
+    })
+  }
   return (
     <View style={styles.container}>
 
@@ -288,7 +306,7 @@ const StudentValues = ({
         {additional.length > 0 && (
           <>
             <Text style={styles.additionalHeading}>
-              ADDITIONAL COURSES
+              {addHeading}
             </Text>
 
             {additional.map((s, i) => (
@@ -326,10 +344,9 @@ const StudentValues = ({
 
         {isLastPage && (
           <Text style={styles.symbolDescription}>
-            {`* - Considered for CGPA Calculation in the 8th Semester as per Regulations.\n
-                & - Courses considered instead of the Professional / Open Elective Courses as per curriculum\n
-                ^ - Courses not considered for CGPA Calculation`
-            }
+            {student.hasAsterik ? `* - Considered for CGPA Calculation in the 8th Semester as per Regulations.\n` : ''}
+            {student.hasAmbersent ? `& - Courses considered instead of the Professional / Open Elective Courses as per curriculum\n` : ''}
+            {student.hasXor ? `^ - Courses not considered for CGPA Calculation` : ''}
           </Text>
         )
         }
@@ -338,7 +355,7 @@ const StudentValues = ({
         {isLastPage && (
           <Text style={styles.endStatement}>
             {`*** End of Statement *** \n`}
-            {hasContinuedPage ? `**Continuation Sheet..${continuedPage}/${continuedPageLength}` : ''}
+            {continuedPageLength>1 ? `**Continuation Sheet..${continuedPage}/${continuedPageLength}` : ''}
           </Text>
         )}
       </View>

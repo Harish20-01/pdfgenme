@@ -16,6 +16,7 @@ export const parseStudentExcel = async (file, photoMap = {}) => {
         const students = [];
         let currentStudent = null;
         let isAdditionalSection = false;
+        let hasAmbersent=false,hasAsterik =false,hasXor=false;
 
         for (let i = 0; i < rows.length; i++) {
           const row = rows[i];
@@ -103,13 +104,21 @@ export const parseStudentExcel = async (file, photoMap = {}) => {
               }
             };
             isAdditionalSection = false;
+            hasAsterik =false;
+            hasAmbersent =false;
+            hasXor =false;
             // console.log('New student created:', currentStudent.name);
-            console.log("cheking date", row[5]?.toString().trim() || '')
+            //console.log("cheking date", row[5]?.toString().trim() || '')
           }
           // Check for ADDITIONAL marker row
-          else if (currentStudent && firstCell.toUpperCase() === 'ADDITIONAL') {
+          else if (currentStudent && firstCell.toUpperCase() === 'ADDITIONAL'||firstCell.toLowerCase().includes('additional')) {
             isAdditionalSection = true;
-            // console.log('Additional section started');
+            if(firstCell.includes('*'))
+            currentStudent.hasAsterik=true;
+            else if(firstCell.includes('&'))
+            currentStudent.hasAmbersent=true;
+            else if(firstCell.includes('^'))
+            currentStudent.hasXor=true;
             continue;
           }
           // Check if this is a subject row (has semester number in first column)
@@ -137,7 +146,7 @@ export const parseStudentExcel = async (file, photoMap = {}) => {
               letterGrade: row[6]?.toString().trim() || '',
               result: row[7]?.toString().trim() || '',
               gradeNote: gradeNote,
-              isAdditional: isAdditional
+              isAdditional: isAdditional,
             });
           }
           else if (currentStudent && firstCell) {
